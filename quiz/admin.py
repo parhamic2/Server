@@ -98,6 +98,7 @@ from django.urls import reverse
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
+    
     list_display = (
         "_username",
         "coins",
