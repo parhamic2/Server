@@ -93,7 +93,7 @@ def give_xp(model, request, queryset):
 
 from rangefilter.filter import DateRangeFilter
 from django.utils.html import mark_safe
-from django.urls import reverse
+from django.urls import reverse, path
 from django.http import JsonResponse
 
 
