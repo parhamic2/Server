@@ -117,7 +117,9 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     search_fields = ["username"]
     actions = ["export_as_csv", give_xp]
     def device(self, obj):
-        if ':' in obj.device_id:
+        if obj.is_bot:
+            return 'BOT'
+        if '-' in obj.device_id:
             return 'iOS'
         return 'Android'
     def get_queryset(self, request):
