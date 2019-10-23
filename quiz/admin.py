@@ -113,7 +113,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
 
     def chart_data(self):
         return (
-            User.objects.annotate(x=TruncDay("date_joined"))
+            User.objects.filter(is_bot=False).annotate(x=TruncDay("date_joined"))
             .values("x")
             .annotate(y=Count("id"))
             .order_by("-x")
