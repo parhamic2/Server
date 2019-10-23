@@ -1,8 +1,77 @@
 {% extends "admin/change_list.html" %}
 {% load static %}
+
+<!-- Override extrahead to add Chart.js -->
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        // Sample data
+
+        // Render the chart
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: 'new users',
+                        data: [],
+                        backgroundColor: 'rgba(220,20,20,0.5)',
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    xAxes: [
+                        {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                round: 'day',
+                                displayFormats: {
+                                    day: 'MMM D',
+                                },
+                            },
+                        },
+                    ],
+                    yAxes: [
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+
+
+        let fetchChart = () => {
+            const res = await fetch("/admin/quiz/user/chart_data/");
+            const json = await res.json();
+            chart.data.datasets[0].data = json;
+            chart.update();
+        };
+
+        const btn = document.querySelector('#reload');
+        btn.addEventListener('click', async() => {
+            fetchChart();
+        });
+
+    });
+</script>
+{% endblock %}
+
 {% block content %}
-
-<h1>Custom message!</h1>
-
+<!-- Render our chart -->
+<div style="width: 80%;">
+    <canvas style="margin-bottom: 30px; width: 60%; height: 50%;" id="myChart"></canvas>
+</div>
+<button id="reload" style="margin: 1rem 0">Reload chart data</button>
+<!-- Render the rest of the ChangeList view -->
 {{ block.super }}
 {% endblock %}

@@ -94,10 +94,29 @@ def give_xp(model, request, queryset):
 from rangefilter.filter import DateRangeFilter
 from django.utils.html import mark_safe
 from django.urls import reverse
+from django.http import JsonResponse
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
+    def get_urls(self):
+        urls = super().get_urls()
+        extra_urls = [
+            path("chart_data/", self.admin_site.admin_view(self.chart_data_endpoint))
+        ]
+        return extra_urls + urls
+
+    def chart_data_endpoint(self, request):
+        chart_data = self.chart_data()
+        return JsonResponse(list(chart_data), safe=False)
+
+    def chart_data(self):
+        return (
+            User.objects.annotate(x=TruncDay("date_joined"))
+            .values("x")
+            .annotate(y=Count("id"))
+            .order_by("-x")
+        )
     
     list_display = (
         "_username",
