@@ -95,7 +95,7 @@ from rangefilter.filter import DateRangeFilter
 from django.utils.html import mark_safe
 from django.urls import reverse, path
 from django.http import JsonResponse
-
+from django.db.models.functions import TruncDay
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
