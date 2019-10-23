@@ -50,7 +50,7 @@
         });
 
 
-        let fetchChart = () => {
+        let fetchChart = async() => {
             const res = await fetch("/admin/quiz/user/chart_data/");
             const json = await res.json();
             chart.data.datasets[0].data = json;
