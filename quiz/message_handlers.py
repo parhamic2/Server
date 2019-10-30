@@ -603,6 +603,14 @@ class LevelQuestionsHandler(Handler):
 
         questions = []
         max_ln = 0
+
+        # TODO: Remove me
+        setattr(
+            level,
+            "num_questions_length8",
+            0,
+        )
+
         for i in range(8, 0, -1):
             if getattr(level, "num_questions_length{}".format(i)) > 0:
                 max_ln = i
