@@ -592,6 +592,12 @@ class LevelQuestionsHandler(Handler):
         random.shuffle(all_words)
         words_based_on_length = []
         total_questions = 0
+        # TODO: Remove me
+        setattr(
+            level,
+            "num_questions_length8",
+            0,
+        )
         for i in range(0, 9):
             words_based_on_length.append([])
             if i >= 1:
@@ -604,12 +610,6 @@ class LevelQuestionsHandler(Handler):
         questions = []
         max_ln = 0
 
-        # TODO: Remove me
-        setattr(
-            level,
-            "num_questions_length8",
-            0,
-        )
 
         for i in range(8, 0, -1):
             if getattr(level, "num_questions_length{}".format(i)) > 0:
