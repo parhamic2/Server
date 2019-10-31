@@ -113,7 +113,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         chart_data = self.installs_chart_data()
         return JsonResponse(list(chart_data), safe=False)
     
-    def installs_chart_data_endpoint(self, request):
+    def online_chart_data_endpoint(self, request):
         chart_data = self.online_chart_data()
         return JsonResponse(list(chart_data), safe=False)
 
