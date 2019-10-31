@@ -140,7 +140,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         return [
             [User.objects.filter(store__icontains="bazaar").count()],
             [User.objects.filter(store__icontains="google").count()],
-            [User.objects.filter(store__icontains="apple").count()],
+            [User.objects.filter(store__icontains="apple").count()]
         ]
     
     list_display = (
