@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const ctx = document.getElementById('myChart').getContext('2d');
+        const ctx = document.getElementById('installChart').getContext('2d');
         // Sample data
 
         // Render the chart
@@ -51,7 +51,7 @@
 
 
         // ONLINE -- CHART
-        const ctx2 = document.getElementById('myChart2').getContext('2d');
+        const ctx2 = document.getElementById('onlineChart').getContext('2d');
         // Sample data
 
         // Render the chart
@@ -93,10 +93,57 @@
         });
 
 
+        // STORES -- CHART
+        const ctx3 = document.getElementById('storeChart').getContext('2d');
+        // Sample data
+
+        // Render the chart
+        const chart3 = new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                datasets: [
+                    {
+                        label: 'bazar',
+                        data: [],
+                        backgroundColor: 'rgba(20,220,20,0.5)',
+                    },
+                    {
+                        label: 'google',
+                        data: [],
+                        backgroundColor: 'rgba(220,20,20,0.5)',
+                    },
+                    {
+                        label: 'apple',
+                        data: [],
+                        backgroundColor: 'rgba(20,20,220,0.5)',
+                    }
+                ],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    yAxes: [
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+
+
         let fetchChart = async (_chart, url) => {
             const res = await fetch(url);
             const json = await res.json();
-            _chart.data.datasets[0].data = json;
+            if (Array.isArray(json)) {
+                for (let i = 0; i < json.length; i++) {
+                    _chart.data.datasets[i].data = json[i];
+                }
+            }
+            else
+                _chart.data.datasets[0].data = json;
             _chart.update();
         };
 
@@ -104,10 +151,12 @@
         btn.addEventListener('click', async () => {
             fetchChart(chart, "/admin/quiz/user/installs_chart_data/");
             fetchChart(chart2, "/admin/quiz/user/online_chart_data/");
+            fetchChart(chart3, "/admin/quiz/user/stores_chart_data/");
         });
 
         fetchChart(chart, "/admin/quiz/user/installs_chart_data/");
         fetchChart(chart2, "/admin/quiz/user/online_chart_data/");
+        fetchChart(chart3, "/admin/quiz/user/stores_chart_data/");
     });
 </script>
 {% endblock %}
@@ -115,11 +164,14 @@
 {% block content %}
 <!-- Render our chart -->
 <div style="width: 80%;">
-    <canvas style="margin-bottom: 30px; width: 60%; height: 50%;" id="myChart"></canvas>
+    <canvas style="margin-bottom: 30px; width: 60%; height: 50%;" id="storeChart"></canvas>
+</div>
+<div style="width: 80%;">
+    <canvas style="margin-bottom: 30px; width: 60%; height: 50%;" id="installChart"></canvas>
 </div>
 
 <div style="width: 80%;">
-    <canvas style="margin-bottom: 30px; width: 60%; height: 50%;" id="myChart2"></canvas>
+    <canvas style="margin-bottom: 30px; width: 60%; height: 50%;" id="onlineChart"></canvas>
 </div>
 <button id="reload" style="margin: 1rem 0">Reload chart data</button>
 <!-- Render the rest of the ChangeList view -->

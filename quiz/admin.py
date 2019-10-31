@@ -106,6 +106,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         extra_urls = [
             path("installs_chart_data/", self.admin_site.admin_view(self.installs_chart_data_endpoint)),
             path("online_chart_data/", self.admin_site.admin_view(self.online_chart_data_endpoint)),
+            path("stores_chart_data/", self.admin_site.admin_view(self.stores_chart_data_endpoint)),
         ]
         return extra_urls + urls
 
@@ -115,6 +116,10 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     
     def online_chart_data_endpoint(self, request):
         chart_data = self.online_chart_data()
+        return JsonResponse(list(chart_data), safe=False)
+    
+    def stores_chart_data_endpoint(self, request):
+        chart_data = self.stores_chart_data()
         return JsonResponse(list(chart_data), safe=False)
 
     def installs_chart_data(self):
@@ -131,6 +136,12 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
             .annotate(y=Count("id"))
             .order_by("-x")
         )
+    def stores_chart_data(self):
+        return [
+            [User.objects.filter(is_bot=True).count()],
+            [User.objects.filter(is_bot=False).count()],
+            [User.objects.filter(is_bot=True).count()],
+        ]
     
     list_display = (
         "_username",
