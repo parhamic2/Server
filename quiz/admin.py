@@ -104,17 +104,29 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     def get_urls(self):
         urls = super().get_urls()
         extra_urls = [
-            path("chart_data/", self.admin_site.admin_view(self.chart_data_endpoint))
+            path("installs_chart_data/", self.admin_site.admin_view(self.installs_chart_data_endpoint)),
+            path("online_chart_data/", self.admin_site.admin_view(self.online_chart_data_endpoint)),
         ]
         return extra_urls + urls
 
-    def chart_data_endpoint(self, request):
-        chart_data = self.chart_data()
+    def installs_chart_data_endpoint(self, request):
+        chart_data = self.installs_chart_data()
+        return JsonResponse(list(chart_data), safe=False)
+    
+    def installs_chart_data_endpoint(self, request):
+        chart_data = self.online_chart_data()
         return JsonResponse(list(chart_data), safe=False)
 
-    def chart_data(self):
+    def installs_chart_data(self):
         return (
             User.objects.filter(is_bot=False, logged_in=True).annotate(x=TruncDay("date_joined"))
+            .values("x")
+            .annotate(y=Count("id"))
+            .order_by("-x")
+        )
+    def online_chart_data(self):
+        return (
+            PlayRecord.objects.all().annotate(x=TruncDay("date"))
             .values("x")
             .annotate(y=Count("id"))
             .order_by("-x")

@@ -50,19 +50,64 @@
         });
 
 
-        let fetchChart = async() => {
-            const res = await fetch("/admin/quiz/user/chart_data/");
+        // ONLINE -- CHART
+        const ctx2 = document.getElementById('myChart2').getContext('2d');
+        // Sample data
+
+        // Render the chart
+        const chart2 = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        label: 'online',
+                        data: [],
+                        backgroundColor: 'rgba(220,20,20,0.5)',
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    xAxes: [
+                        {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                round: 'day',
+                                displayFormats: {
+                                    day: 'MMM D',
+                                },
+                            },
+                        },
+                    ],
+                    yAxes: [
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+
+
+        let fetchChart = async (_chart, url) => {
+            const res = await fetch(url);
             const json = await res.json();
-            chart.data.datasets[0].data = json;
-            chart.update();
+            _chart.data.datasets[0].data = json;
+            _chart.update();
         };
 
         const btn = document.querySelector('#reload');
-        btn.addEventListener('click', async() => {
-            fetchChart();
+        btn.addEventListener('click', async () => {
+            fetchChart(chart, "/admin/quiz/user/installs_chart_data/");
+            fetchChart(chart2, "/admin/quiz/user/online_chart_data/");
         });
 
-        fetchChart();
+        fetchChart(chart, "/admin/quiz/user/installs_chart_data/");
+        fetchChart(chart2, "/admin/quiz/user/online_chart_data/");
     });
 </script>
 {% endblock %}
@@ -71,6 +116,10 @@
 <!-- Render our chart -->
 <div style="width: 80%;">
     <canvas style="margin-bottom: 30px; width: 60%; height: 50%;" id="myChart"></canvas>
+</div>
+
+<div style="width: 80%;">
+    <canvas style="margin-bottom: 30px; width: 60%; height: 50%;" id="myChart2"></canvas>
 </div>
 <button id="reload" style="margin: 1rem 0">Reload chart data</button>
 <!-- Render the rest of the ChangeList view -->
