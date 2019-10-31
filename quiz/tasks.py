@@ -35,7 +35,7 @@ def alive_message(id, msgs):
     diff = (get_time() - user.last_alive_message)
     diff = diff.seconds * 10**6 + diff.microseconds
     diff = diff / (10**6)
-
+    print ('Alive message Diff IS : {}'.format(diff))
     if diff < 3:
         record.played_time += diff
         record.save(update_fields=['played_time'])
