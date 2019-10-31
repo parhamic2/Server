@@ -139,7 +139,8 @@
             const json = await res.json();
             if (Array.isArray(json)) {
                 for (let i = 0; i < json.length; i++) {
-                    _chart.data.datasets[i].data = json[i];
+                    if (_chart.data.datasets[i])
+                        _chart.data.datasets[i].data = json[i];
                 }
             }
             else
