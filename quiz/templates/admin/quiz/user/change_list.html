@@ -137,6 +137,7 @@
         let fetchChart = async (_chart, url) => {
             const res = await fetch(url);
             const json = await res.json();
+            console.log(json);
             if (Array.isArray(json)) {
                 for (let i = 0; i < json.length; i++) {
                     if (_chart.data.datasets[i])
