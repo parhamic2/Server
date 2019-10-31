@@ -138,9 +138,9 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         )
     def stores_chart_data(self):
         return [
-            [User.objects.filter(is_bot=True).count()],
-            [User.objects.filter(is_bot=False).count()],
-            [User.objects.filter(is_bot=True).count()],
+            [User.objects.filter(store__icontains="bazaar").count()],
+            [User.objects.filter(store__icontains="google").count()],
+            [User.objects.filter(store__icontains="apple").count()],
         ]
     
     list_display = (

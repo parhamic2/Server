@@ -172,6 +172,7 @@ class GameInfoHandler(Handler):
                 self.request.user.ip_address = get_client_ip(self.request)
                 self.request.user.push_notification_id = params["push_notification_id"]
                 self.request.user.device_id = params["device_id"]
+                self.request.user.store = params["store"]
                 self.request.user.save()
 
                 if context["email"]:

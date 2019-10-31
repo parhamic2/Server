@@ -15,6 +15,7 @@ def LEVELS_XPS():
 class User(AbstractUser):
     export_fields = ["username", "xp", "coins", "trophy", "copouns", "parent", "is_bot"]
 
+    store = models.CharField(max_length=128, blank=True, null=True)
     is_bot = models.BooleanField(default=False)
     in_queue = models.BooleanField(default=False)
     queued_time = models.DateTimeField(blank=True, null=True)
