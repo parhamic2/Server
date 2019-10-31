@@ -19,7 +19,8 @@ from .models import (
     LevelTrack,
     ZarinPayment,
     InviteCode,
-    SendGroupNotification
+    SendGroupNotification,
+    PlayRecord
 )
 from .tournoment import Tournoment, TournomentUser
 from django.utils import timezone
@@ -240,3 +241,6 @@ class InviteCodeAdmin(admin.ModelAdmin):
 
     list_filter = ["perminent"]
 
+@admin.register(PlayRecord)
+class PlayRecordAdmin(admin.ModelAdmin):
+    list_display = ["player", "date", "played_time"]

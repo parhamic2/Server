@@ -688,3 +688,8 @@ class SendGroupNotification(models.Model):
     class Meta:
         verbose_name = "Send group notification"
         verbose_name_plural = "Send group notification"
+
+class PlayRecord(models.Model):
+    date = models.DateTimeField(auto_now=True)
+    player = models.ForeignKey(User, related_name='records', on_delete=models.CASCADE)
+    played_time = models.FloatField(default=0)
