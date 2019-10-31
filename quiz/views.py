@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from django.views.generic import View
 
 from .message_handlers import get_handlers, get_country
-from .models import User, ShopItem
+from .models import User, ShopItem, PlayRecord
 from .serializers import MessageSerializer
 from .utils import get_time
 from .tasks import alive_message
@@ -58,6 +58,23 @@ class MessageAPI(APIView):
         queryset = request.user.messages.filter(hidden=False)
         serializer = MessageSerializer(queryset, many=True)
         data = serializer.data  # save the data before deleting the queryset
+        
+        user = request.user
+        record = PlayRecord.objects.filter(date__date=get_time().date(), player=user)
+        if record.count() == 0:
+            record = PlayRecord.objects.create(player=user)
+        else:
+            record = record.first()
+        
+        diff = (get_time() - user.last_alive_message)
+        diff = diff.seconds * 10**6 + diff.microseconds
+        diff = diff / (10**6)
+        print ('Alive message Diff IS : {}'.format(diff))
+        if diff < 3:
+            record.played_time += diff
+            record.save(update_fields=['played_time'])
+        user.last_alive_message = get_time()
+        user.save(update_fields=["last_alive_message"])
 
         alive_message.delay(
             request.user.pk, list(queryset.values_list("id", flat=True))

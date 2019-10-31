@@ -26,21 +26,6 @@ def alive_message(id, msgs):
         else:
             obj.delete()
 
-    record = PlayRecord.objects.filter(date__date=get_time().date(), player=user)
-    if record.count() == 0:
-        record = PlayRecord.objects.create(player=user)
-    else:
-        record = record.first()
-    
-    diff = (get_time() - user.last_alive_message)
-    diff = diff.seconds * 10**6 + diff.microseconds
-    diff = diff / (10**6)
-    print ('Alive message Diff IS : {}'.format(diff))
-    if diff < 3:
-        record.played_time += diff
-        record.save(update_fields=['played_time'])
-    user.last_alive_message = get_time()
-    user.save(update_fields=["last_alive_message"])
     user.check_boost_expire()
 
 @shared_task
