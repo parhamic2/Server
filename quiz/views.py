@@ -66,14 +66,15 @@ class MessageAPI(APIView):
         else:
             record = record.first()
         
-        diff = (get_time() - user.last_alive_message)
-        diff = diff.seconds * 10**6 + diff.microseconds
-        diff = diff / (10**6)
-        print ('Alive message Diff IS : {}'.format(diff))
-        if diff < 5:
-            record.played_time += diff
-            record.played_time = int(record.played_time * 10) / 10
-            record.save(update_fields=['played_time'])
+        if user.last_alive_message is not None:
+            diff = (get_time() - user.last_alive_message)
+            diff = diff.seconds * 10**6 + diff.microseconds
+            diff = diff / (10**6)
+            print ('Alive message Diff IS : {}'.format(diff))
+            if diff < 5:
+                record.played_time += diff
+                record.played_time = int(record.played_time * 10) / 10
+                record.save(update_fields=['played_time'])
         user.last_alive_message = get_time()
         user.save(update_fields=["last_alive_message"])
 
