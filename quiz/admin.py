@@ -90,7 +90,7 @@ class LevelFilter(admin.SimpleListFilter):
     parameter_name = "level"
 
     def lookups(self, request, model_admin):
-        return [[x, x], for x in range(1, 13)]
+        return [[x, x] for x in range(1, 13)]
 
     def queryset(self, request, queryset):
         v = self.value()
@@ -103,7 +103,7 @@ class PartLevel(admin.SimpleListFilter):
     parameter_name = "part"
 
     def lookups(self, request, model_admin):
-        return [[x, x], for x in range(1, 11)]
+        return [[x, x] for x in range(1, 11)]
 
     def queryset(self, request, queryset):
         v = self.value()
