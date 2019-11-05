@@ -19,7 +19,7 @@ from .models import (
     LevelTrack,
     ZarinPayment,
     InviteCode,
-    SendGroupNotification,
+    SendNotification,
     PlayRecord
 )
 from .tournoment import Tournoment, TournomentUser
@@ -30,7 +30,7 @@ from django.utils.html import format_html
 import csv
 
 admin.site.register(Message)
-admin.site.register(SendGroupNotification)
+admin.site.register(SendNotification)
 admin.site.register(MatchGame)
 admin.site.register(CoinCode)
 admin.site.register(Tournoment)
@@ -154,13 +154,19 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     )
     list_filter = (
         OnlineStatusFilter,
+        "marked_for_notification",
         "is_bot",
         "date_joined",
         ("date_joined", DateRangeFilter),
     )
     readonly_fields = ["childs_list", "level_reached_detail"]
     search_fields = ["username"]
-    actions = ["export_as_csv", give_xp]
+    actions = ["export_as_csv", give_xp, "mark_for_notification", "unmark_for_notification"]
+
+    def mark_for_notification(self, request, queryset):
+        queryset.update(mark_for_notification=True)
+    def unmark_for_notification(self, request, queryset):
+        queryset.update(mark_for_notification=False)
     def device(self, obj):
         if obj.is_bot:
             return 'BOT'

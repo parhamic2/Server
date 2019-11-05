@@ -15,6 +15,7 @@ def LEVELS_XPS():
 class User(AbstractUser):
     export_fields = ["username", "xp", "coins", "trophy", "copouns", "parent", "is_bot"]
 
+    marked_for_notification = models.BooleanField(default=False)
     store = models.CharField(max_length=128, blank=True, null=True)
     is_bot = models.BooleanField(default=False)
     in_queue = models.BooleanField(default=False)
@@ -679,12 +680,11 @@ class InviteCode(models.Model):
                 self.code = generate_password(5)
         super().save(*args, **kwargs)
 
-class SendGroupNotification(models.Model):
-    parent = models.ForeignKey(User, blank=True, on_delete=models.CASCADE)
+class SendNotification(models.Model):
     title = models.CharField(blank=True, max_length=64)
     message = models.TextField(blank=True)
     def save(self, *args, **kwargs):
-        for user in self.parent.childs.all():
+        for user in User.objects.filter(marked_for_notification=True):
             user.send_notification(self.title, self.message)
     class Meta:
         verbose_name = "Send group notification"
