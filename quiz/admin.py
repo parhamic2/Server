@@ -95,6 +95,7 @@ class LevelFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         v = self.value()
         if v is not None:
+            v = int(v)
             return queryset.filter(xp__gte=LEVELS_XPS()[v], xp__lte=LEVELS_XPS()[v+1])
         return queryset
 
@@ -110,7 +111,7 @@ class PartFilter(admin.SimpleListFilter):
         if v is not None:
             ids = []
             for obj in queryset:
-                if obj.level_reached[1] == int(v)-1:
+                if str(obj.level_reached)[1] == int(v)-1:
                     ids.append(obj.pk)
             return queryset.filter(id__in=ids)
         return queryset
