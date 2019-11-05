@@ -202,9 +202,9 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         lvl = str(obj.level_reached)
         return 'S:{} P:{}: L:{}'.format(lvl[0], int(lvl[1]) + 1, int(lvl[2:]))
     def mark_for_notification(self, request, queryset):
-        queryset.update(mark_for_notification=True)
+        queryset.update(marked_for_notification=True)
     def unmark_for_notification(self, request, queryset):
-        queryset.update(mark_for_notification=False)
+        queryset.update(marked_for_notification=False)
     def device(self, obj):
         if obj.is_bot:
             return 'BOT'
