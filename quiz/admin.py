@@ -111,7 +111,7 @@ class PartFilter(admin.SimpleListFilter):
         if v is not None:
             ids = []
             for obj in queryset:
-                if str(obj.level_reached)[1] == int(v)-1:
+                if str(obj.level_reached)[1] == str(int(v)-1):
                     ids.append(obj.pk)
             return queryset.filter(id__in=ids)
         return queryset
