@@ -98,7 +98,7 @@ class LevelFilter(admin.SimpleListFilter):
             return queryset.filter(xp__gte=LEVELS_XPS()[v], xp__lte=LEVELS_XPS()[v+1])
         return queryset
 
-class PartLevel(admin.SimpleListFilter):
+class PartFilter(admin.SimpleListFilter):
     title = "Part"
     parameter_name = "part"
 
