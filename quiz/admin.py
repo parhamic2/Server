@@ -20,7 +20,8 @@ from .models import (
     ZarinPayment,
     InviteCode,
     SendNotification,
-    PlayRecord
+    PlayRecord,
+    LEVELS_XPS
 )
 from .tournoment import Tournoment, TournomentUser
 from django.utils import timezone
@@ -84,7 +85,35 @@ class OnlineStatusFilter(admin.SimpleListFilter):
                 last_alive_message__lte=get_time() - timezone.timedelta(seconds=3)
             )
         return queryset
+class LevelFilter(admin.SimpleListFilter):
+    title = "Level"
+    parameter_name = "level"
 
+    def lookups(self, request, model_admin):
+        return [[x, x], for x in range(1, 13)]
+
+    def queryset(self, request, queryset):
+        v = self.value()
+        if v.isnumeric():
+            return queryset.filter(xp__gte=LEVELS_XPS()[v], xp__lte=LEVELS_XPS()[v+1])
+        return queryset
+
+class PartLevel(admin.SimpleListFilter):
+    title = "Part"
+    parameter_name = "part"
+
+    def lookups(self, request, model_admin):
+        return [[x, x], for x in range(1, 11)]
+
+    def queryset(self, request, queryset):
+        v = self.value()
+        if v.isnumeric():
+            ids = []
+            for obj in queryset:
+                if obj.level_reached[1] == int(v)-1:
+                    ids.append(obj.pk)
+            return queryset.filter(id__in=ids)
+        return queryset
 
 def give_xp(model, request, queryset):
     for obj in queryset:
@@ -146,7 +175,8 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = (
         "_username",
         "coins",
-        "xp",
+        "_xp",
+        "_level_reached",
         "date_joined",
         "last_alive_message",
         "_parent",
@@ -154,6 +184,8 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     )
     list_filter = (
         OnlineStatusFilter,
+        LevelFilter,
+        PartFilter,
         "marked_for_notification",
         "is_bot",
         "date_joined",
@@ -163,6 +195,12 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     search_fields = ["username"]
     actions = ["export_as_csv", give_xp, "mark_for_notification", "unmark_for_notification"]
 
+    def _xp(self, obj):
+        lvl, xp = obj.get_level()
+        return '{} + {}xp'.format(lvl, xp)
+    def _level_reached(self, obj):
+        lvl = str(obj.level_reached)
+        return 'S:{} P:{}: L:{}'.format(lvl[0], int(lvl[1]) + 1, int(lvl[2:]))
     def mark_for_notification(self, request, queryset):
         queryset.update(mark_for_notification=True)
     def unmark_for_notification(self, request, queryset):
