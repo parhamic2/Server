@@ -261,6 +261,7 @@ class SetPlayerInfoHandler(Handler):
         if code == "" or self.request.user.parent is not None:
             return TEXTS["wrong_invite_code"]
         invite_code = InviteCode.objects.filter(code=code)
+        coin_code = CoinCode.objects.filter(code=code)
         if invite_code.count() > 0:
             invite_code =  invite_code.first()
             user = invite_code.user
@@ -273,6 +274,10 @@ class SetPlayerInfoHandler(Handler):
             user.save()
             self.request.user.parent = user
             self.request.user.coins += config.INVITE_CODE_CHILD_REWARD
+            self.request.user.save()
+        elif coin_code.count() > 0:
+            coin_code =  coin_code.first()
+            self.request.user.coins += coin_code.coin_amount
             self.request.user.save()
         else:
             return TEXTS["wrong_invite_code"], None
