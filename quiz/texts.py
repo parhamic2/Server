@@ -94,6 +94,8 @@ if settings.LANGUAGE == 'FA':
     TEXTS = TEXTS_FA
 
 def get_text(key):
+    if key not in TEXTS:
+        return key
     if TEXTS[key] == "":
         return key
     return TEXTS[key]

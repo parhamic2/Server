@@ -279,6 +279,10 @@ class SetPlayerInfoHandler(Handler):
             coin_code =  coin_code.first()
             self.request.user.coins += coin_code.coin_amount
             self.request.user.save()
+            return (
+                None,
+                get_text('coin_code').format(coin_code.coin_amount)
+            )
         else:
             return TEXTS["wrong_invite_code"], None
         return (
