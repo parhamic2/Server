@@ -1472,7 +1472,7 @@ class SubmitInviteCodeHandler(Handler):
         context = {}
         context['succeed'] = True
         params = self.get_params()
-        error, msg = SetPlayerInfoHandler().handle_invite_code(params['code'], self.request.user.username)
+        error, msg = SetPlayerInfoHandler(self.request).handle_invite_code(params['code'], self.request.user.username)
         if error is not None:
             context['succeed'] = False
             context['error'] = error
