@@ -1477,7 +1477,7 @@ class SubmitInviteCodeHandler(Handler):
             context['succeed'] = False
             context['error'] = error
 
-        return self.response('get_invite_code', context)
+        return self.response('submit_invite_code', context)
 
 class AutoCompleteQueryHandler(Handler):
     def is_match(self, username, q):
