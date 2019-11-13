@@ -115,6 +115,7 @@ class GameInfoHandler(Handler):
             else:
                 context['country'] = 'ir'
                 context['invite_code_child_reward'] = INVITE_CODE_CHILD_REWARD
+                context['has_parent'] = self.request.user.parent is not None
                 context["ad_coins"] = config.AD_COINS
                 context["email_verify_coins"] = config.EMAIL_VERIFY_REWARD
                 context["invite_friend_coins"] = config.INVITE_CODE_PARENT_REWARD
