@@ -114,11 +114,11 @@ class GameInfoHandler(Handler):
                 context['estimated_time'] = config.ESTIMATED_TIME
             else:
                 context['country'] = 'ir'
-                context['invite_code_child_reward'] = INVITE_CODE_CHILD_REWARD
                 context['has_parent'] = self.request.user.parent is not None
                 context["ad_coins"] = config.AD_COINS
                 context["email_verify_coins"] = config.EMAIL_VERIFY_REWARD
                 context["invite_friend_coins"] = config.INVITE_CODE_PARENT_REWARD
+                context['invite_code_child_reward'] = config.INVITE_CODE_CHILD_REWARD
                 context["prices"] = PurchaseHandler.get_prices()
                 context['update_reward'] = config.UPDATE_REWARD_COINS
                 if config.MOTD_TITLE != '':
