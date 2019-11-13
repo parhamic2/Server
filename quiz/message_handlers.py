@@ -114,6 +114,7 @@ class GameInfoHandler(Handler):
                 context['estimated_time'] = config.ESTIMATED_TIME
             else:
                 context['country'] = 'ir'
+                context['invite_code_child_reward'] = INVITE_CODE_CHILD_REWARD
                 context["ad_coins"] = config.AD_COINS
                 context["email_verify_coins"] = config.EMAIL_VERIFY_REWARD
                 context["invite_friend_coins"] = config.INVITE_CODE_PARENT_REWARD
@@ -237,13 +238,13 @@ class GameInfoHandler(Handler):
                 context["tournoments"].append(t)
         return self.response("game_info", context)
 
-from django.contrib.auth.validators import ASCIIUsernameValidator
+from django.contrib.auth.validators import UnicodeUsernameValidator
 class SetPlayerInfoHandler(Handler):
     def validate(params):
         if "username" not in params:
             return TEXTS["invalid_input"], None
         u = params["username"]
-        if len(u) < 3:
+        if len(u) < 2:
             return TEXTS["username_short"], None
         if User.objects.filter(username=u).count() > 0:
             suggestion = u
@@ -251,7 +252,7 @@ class SetPlayerInfoHandler(Handler):
                 suggestion = "{}{}".format(u, random.randint(1000, 9999))
             return TEXTS["user_exist"], suggestion
         try:
-            ASCIIUsernameValidator()(u)
+            UnicodeUsernameValidator()(u)
         except:
             return TEXTS["invalid_input"], None
         return None, None
@@ -1465,6 +1466,18 @@ class GetInviteCodeHandler(Handler):
         context["invite_code"] = InviteCode.objects.create(user=self.request.user).code
         return self.response('get_invite_code', context)
 
+class SubmitInviteCodeHandler(Handler):
+    def handle(self):
+        context = {}
+        context['succeed'] = True
+        params = self.get_params()
+        error, msg = SetPlayerInfoHandler().handle_invite_code(params['code'], self.request.user.username)
+        if error is not None:
+            context['succeed'] = False
+            context['error'] = error
+
+        return self.response('get_invite_code', context)
+
 class AutoCompleteQueryHandler(Handler):
     def is_match(self, username, q):
         return q in username
@@ -1533,7 +1546,8 @@ MESSAGE_HANDLERS = {
     "shop_purchase": ShopPurchaseHandler,
     'pending_matches': PendingMatchesHandler,
     'match_emoji': MatchEmojiHandler,
-    "autocomplete_query": AutoCompleteQueryHandler
+    "autocomplete_query": AutoCompleteQueryHandler,
+    "submit_invite_code": SubmitInviteCodeHandler,
 }
 
 
