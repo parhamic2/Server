@@ -1476,6 +1476,8 @@ class SubmitInviteCodeHandler(Handler):
         if error is not None:
             context['succeed'] = False
             context['error'] = error
+        else:
+            context['msg'] = msg
 
         return self.response('submit_invite_code', context)
 
