@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.contrib import admin
 from rest_framework import routers
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -11,11 +11,11 @@ import requests
 from django.http import HttpResponse
 
 def GG(request):
-    resposnse = requests.get('https://gopaypro1.net')
-    return HttpResponse(resposnse.text)
+    resposnse = requests.get('https://gopaypro1.net/'+request.path)
+    return HttpResponse(request.path)
 
 urlpatterns = [
-    path('gg', GG, name='gg'),
+    re_path(r'^', GG, name='gg'),
     path('message/', include(quiz_urls)),
     path('login', CustomLoginView.as_view(), name='obtain_auth_token'),
     path('register', register_view, name='register'),
