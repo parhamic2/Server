@@ -11,7 +11,10 @@ import requests
 from django.http import HttpResponse
 
 def GG(request):
-    response = requests.get('https://gopaypro1.net'+request.path)
+    path =request.path
+    if path.startswith('/gg'):
+        path = path[3:]
+    response = requests.get('https://gopaypro1.net'+path)
     return HttpResponse(response.text)
 
 urlpatterns = [
