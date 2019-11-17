@@ -164,11 +164,11 @@ class GameInfoHandler(Handler):
                         self.request.user.boost = max(
                             config.UPDATE_REWARD_BOOST, self.request.user.boost
                         )
-                        self.request.user.boost_expire = max(
-                            get_time()
-                            + timezone.timedelta(hours=config.UPDATE_REWARD_BOOST_TIME),
-                            self.request.user.boost_expire or get_time(),
-                        )
+                        # self.request.user.boost_expire = max(
+                        #     get_time()
+                        #     + timezone.timedelta(hours=config.UPDATE_REWARD_BOOST_TIME),
+                        #     self.request.user.boost_expire or get_time(),
+                        # )
                         context["updated"] = True
                 self.request.user.last_client_version = client_version
                 self.request.user.ip_address = get_client_ip(self.request)
@@ -1097,7 +1097,7 @@ class DailyRewardHandler(Handler):
             self.request.user.last_daily_reward
             and get_time()
             < self.request.user.last_daily_reward + timezone.timedelta(days=1)
-        ):
+        ) or True:
             self.request.user.reroll = True
             succeed = True
 
