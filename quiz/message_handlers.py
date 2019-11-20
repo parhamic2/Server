@@ -520,8 +520,11 @@ class MatchEmojiHandler(Handler):
     def handle(self):
         params = self.get_params()
         match = Match.objects.get(pk=params["match_id"])
-        MatchEmoji.objects.create(emoji=params['emoji'], user=self.request.user, target=match.other_user(self.request.user), match=match)
         MatchEmoji.objects.create(emoji=params['emoji'], user=self.request.user, target=self.request.user, match=match)
+        if match.other_user(self.request.user).is_bot:
+            MatchEmoji.objects.create(emoji=random.choice([':)', 'Nice', 'BLD', '#1', ':))', '#3', '#4']), user=match.other_user(self.request.user), target=self.request.user, match=match)
+        else:
+            MatchEmoji.objects.create(emoji=params['emoji'], user=self.request.user, target=match.other_user(self.request.user), match=match)
         return self.response("match_emoji", None)
 
 class MatchSorroundHandler(Handler):
