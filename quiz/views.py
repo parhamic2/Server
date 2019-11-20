@@ -12,6 +12,7 @@ from .models import User, ShopItem, PlayRecord
 from .serializers import MessageSerializer
 from .utils import get_time
 from .tasks import alive_message
+from django.utils import timezone
 from rest_framework.authtoken.views import ObtainAuthToken
 
 
@@ -60,7 +61,7 @@ class MessageAPI(APIView):
         data = serializer.data  # save the data before deleting the queryset
         
         user = request.user
-        record = PlayRecord.objects.filter(date__date=get_time().date(), player=user)
+        record = PlayRecord.objects.filter(date__gte=get_time() - timezone.timedelta(hours=16), player=user)
         if record.count() == 0:
             record = PlayRecord.objects.create(player=user)
         else:
