@@ -64,7 +64,7 @@ def create_match(
         match.games.filter(row=0).update(state="WAITING")
 
     if len(users) < 2:
-        first_bot_match = match.games.filter(user__isbot=True, row=0)
+        first_bot_match = match.games.filter(user__isbot=True, row=0).first()
         first_bot_match.start_time = get_time() + timezone.timedelta(seconds=9)
         first_bot_match.save()
 
