@@ -463,7 +463,7 @@ class MatchInfoHandler(Handler):
                 e = {}
                 e['emoji'] = emoji.emoji
                 e['emoji_sender'] = emoji.user
-                e['delay'] = random.randrange(1, 3.5, 0.5) if emoji.user.is_bot else 0
+                e['delay'] = (1+random.random()*2.5) if emoji.user.is_bot else 0
                 context['emojies'].append(e)
                 emoji.delete()
             
