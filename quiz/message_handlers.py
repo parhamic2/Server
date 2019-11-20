@@ -463,7 +463,7 @@ class MatchInfoHandler(Handler):
                 e = {}
                 e['emoji'] = emoji.emoji
                 e['emoji_sender'] = emoji.user
-                e['delay'] = (1+random.random()*2.5) if emoji.user.is_bot else 0
+                e['delay'] = (random.random()*3.5) if emoji.user.is_bot else 0
                 context['emojies'].append(e)
                 emoji.delete()
             
@@ -523,7 +523,9 @@ class MatchEmojiHandler(Handler):
         match = Match.objects.get(pk=params["match_id"])
         MatchEmoji.objects.create(emoji=params['emoji'], user=self.request.user, target=self.request.user, match=match)
         if match.other_user(self.request.user).is_bot:
-            MatchEmoji.objects.create(emoji=random.choice([':)', 'Nice', 'BLD', '#1', ':))', '#3', '#4']), user=match.other_user(self.request.user), target=self.request.user, match=match)
+            is_in_lobby = match.games.filter(user=match.other_user(self.request.user), state='PLAYING').count() == 0
+            if random.randint(0, 100) < 35 and is_in_lobby:
+                MatchEmoji.objects.create(emoji=random.choice([':)', 'Nice', 'BLD', '#1', ':))', '#3', '#4']), user=match.other_user(self.request.user), target=self.request.user, match=match)
         else:
             MatchEmoji.objects.create(emoji=params['emoji'], user=self.request.user, target=match.other_user(self.request.user), match=match)
         return self.response("match_emoji", None)
@@ -733,8 +735,8 @@ class LevelCompleteHandler(Handler):
             next_match_game.state = "WAITING"
             # check for bot game
             if next_match_game.user.is_bot:
-                next_match_game.state = "PLAYING"
-                next_match_game.start_time = get_time()
+                # next_match_game.state = "PLAYING"
+                next_match_game.start_time = get_time() + timezone.timedelta(seconds=10)
             next_match_game.save()
             # next_match_game.user.send_message(
             #     'notification', {'msg': TEXTS['your_turn'], 'type': 'turn'})

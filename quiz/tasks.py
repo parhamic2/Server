@@ -42,11 +42,12 @@ def update_matches():
         user__is_bot=True,
         state="WAITING",
         match__created__lt=get_time() - timezone.timedelta(seconds=9),
+        start_time__lte=get_time()
     ).update(state="PLAYING", start_time=get_time())
     bot_games = MatchGame.objects.filter(
         user__is_bot=True,
         state="PLAYING",
-        start_time__lt=get_time() - timezone.timedelta(seconds=random.randint(10, 20)),
+        start_time__lt=get_time() - timezone.timedelta(seconds=5),
     )
     for game in bot_games:
         if game.match.state == "PENDING":
