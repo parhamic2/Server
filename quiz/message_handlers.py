@@ -571,14 +571,10 @@ class QueueHandler(Handler):
         tournoment = None
         if "tournoment" in params:
             tournoment = Tournoment.objects.get(pk=params["tournoment"])
-            if (
-                tournoment.matches.filter(users=self.request.user)
-                .exclude(state="FINISHED")
-                .count()
-                > 0
-            ):
+            tournoment_matches = tournoment.matches.filter(users=self.request.user).exclude(state="FINISHED")
+            if tournoment_matches.count() > 0:
                 return self.response(
-                    "queue", {"error": get_text("tournoment_match_exist")}
+                    "queue", {"error": get_text("tournoment_match_exist"), "match_id": tournoment_matches.first().pk}
                 )
         self.request.user.in_queue = params["in_queue"]
         self.request.user.queued_tournoment = tournoment
