@@ -1099,7 +1099,7 @@ class DailyRewardHandler(Handler):
             self.request.user.last_daily_reward
             and get_time()
             < self.request.user.last_daily_reward + timezone.timedelta(days=1)
-        ) or True:
+        ):
             self.request.user.reroll = True
             succeed = True
 
