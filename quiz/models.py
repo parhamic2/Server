@@ -689,6 +689,7 @@ class SendNotification(models.Model):
     class Meta:
         verbose_name = "Send group notification"
         verbose_name_plural = "Send group notification"
+    
 
 class PlayRecord(models.Model):
     date = models.DateTimeField(auto_now_add=True)

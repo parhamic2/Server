@@ -43,7 +43,7 @@ def update_matches():
         state="WAITING",
         match__created__lt=get_time() - timezone.timedelta(seconds=9),
         start_time__lte=get_time()
-    ).update(state="PLAYING", start_time=get_time())
+    ).update(state="PLAYING")
     bot_games = MatchGame.objects.filter(
         user__is_bot=True,
         state="PLAYING",
