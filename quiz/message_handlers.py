@@ -1155,18 +1155,31 @@ class LoginVerifyEmailHandler(Handler):
         context["succeed"] = True
         for i in range(4):
             code += chr(random.randint(ord("1"), ord("9")))
+        user = None
+        verify_type = 'email'
         try:
             user = User.objects.get(email=email)
-            user.verify_code = code
-            user.save()
-            send_mail(
-                user.email,
-                "Email Verify",
-                "Your code is : {} ".format(code)
-            )
         except:
+            pass
+        try:
+            user = User.objects.get(phone=email)
+            verify_type = 'sms'
+        except:
+            pass
+        if user is None:
             context["succeed"] = False
             context["error"] = TEXTS["email_dont_exist"]
+        else:
+            user.verify_code = code
+            user.save()
+            if verify_type == 'email':
+                send_mail(
+                    user.email,
+                    "Email Verify",
+                    "Your code is : {} ".format(code)
+                )
+            else:
+                send_sms(user.phone, 'جان جیبی\nکد تایید شما : {}'.format(code))
         return context
 
     def handle(self):
