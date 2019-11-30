@@ -1196,8 +1196,16 @@ class LoginVerifyEmailCodeHandler(Handler):
         params = self.get_params()
         context = {}
         context["succeed"] = True
+        user = None
         try:
             user = User.objects.get(email=params["email"])
+        except:
+            pass
+        try:
+            user = User.objects.get(phone=params["phone"])
+        except:
+            pass
+        if user is not None:
             if user.verify_code == params["code"]:
                 pw = generate_password()
                 user.set_password(pw)
@@ -1211,7 +1219,7 @@ class LoginVerifyEmailCodeHandler(Handler):
             else:
                 context["succeed"] = False
                 context["error"] = TEXTS["wrong_verify_code"]
-        except:
+        else:
             context["succeed"] = False
             context["error"] = TEXTS["email_dont_exist"]
         return self.response("verify_email_code", context)
