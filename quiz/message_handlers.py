@@ -1149,7 +1149,7 @@ class AutoLoginHandler(Handler):
         return self.response('auto_login', context)
 
 class LoginVerifyEmailHandler(Handler):
-    def send_verify_email(email):
+    def send_verify_email(email=None, phone=None):
         context = {}
         code = ""
         context["succeed"] = True
@@ -1162,10 +1162,10 @@ class LoginVerifyEmailHandler(Handler):
         except:
             pass
         try:
-            user = User.objects.get(phone=email)
+            user = User.objects.get(phone=phone)
             verify_type = 'sms'
         except:
-            print ('user not found with phone {}'.format(email))
+            print ('user not found with phone {}'.format(phone))
             pass
         if user is None:
             context["succeed"] = False
@@ -1185,7 +1185,7 @@ class LoginVerifyEmailHandler(Handler):
 
     def handle(self):
         params = self.get_params()
-        context = LoginVerifyEmailHandler.send_verify_email(params["email"])
+        context = LoginVerifyEmailHandler.send_verify_email(params["email"], params["phone"])
         return self.response("verify_email", context)
 
 
