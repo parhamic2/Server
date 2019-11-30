@@ -1155,7 +1155,7 @@ class LoginVerifyEmailHandler(Handler):
         context["succeed"] = True
         for i in range(4):
             code += chr(random.randint(ord("1"), ord("9")))
-        user = None
+            user = None
         verify_type = 'email'
         try:
             user = User.objects.get(email=email)
@@ -1165,6 +1165,7 @@ class LoginVerifyEmailHandler(Handler):
             user = User.objects.get(phone=email)
             verify_type = 'sms'
         except:
+            print ('user not found with phone {}'.format(email))
             pass
         if user is None:
             context["succeed"] = False
