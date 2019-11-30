@@ -1185,7 +1185,7 @@ class LoginVerifyEmailHandler(Handler):
 
     def handle(self):
         params = self.get_params()
-        print ('logging in with email {} phone {}'.format(email, phone))
+        print ('logging in with email {} phone {}'.format(params["email"], params["phone"]))
         context = LoginVerifyEmailHandler.send_verify_email(params["email"], params["phone"])
         return self.response("verify_email", context)
 
