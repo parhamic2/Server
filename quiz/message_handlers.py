@@ -793,7 +793,7 @@ class LevelCompleteHandler(Handler):
                     if next_level.level_id == 11001: # start of part 2
                         self.request.user.boost = 1.2
                         self.request.user.boost_expire = get_time() + timezone.timedelta(days=1)
-                        self.request.user.send_mail(get_text('starter_boost_title'), get_text('starter_boost'))
+                        self.request.user.send_message("show_popup", {'title': get_text('starter_boost_title'), 'message': get_text('starter_boost')})
                 except:
                     self.request.user.level_reached += 1
                 self.request.user.save()

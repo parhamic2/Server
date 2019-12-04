@@ -683,9 +683,13 @@ class InviteCode(models.Model):
 class SendNotification(models.Model):
     title = models.CharField(blank=True, max_length=64)
     message = models.TextField(blank=True)
+    in_game_notification = models.BooleanField(default=False)
     def save(self, *args, **kwargs):
         for user in User.objects.filter(marked_for_notification=True):
-            user.send_notification(self.title, self.message)
+            if self.in_game_notification:
+                user.send_mail(self.title, self.message)
+            else:
+                user.send_notification(self.title, self.message)
     class Meta:
         verbose_name = "Send group notification"
         verbose_name_plural = "Send group notification"
