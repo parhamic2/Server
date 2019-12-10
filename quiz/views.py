@@ -136,6 +136,10 @@ def verify_payment(request):
         result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], payment.amount)
         if result.Status == 100:
             payment.is_done = True
+            shop_item = ShopItem.objects.get(pk=payment.item)
+            payment.user.spent += shop_item.price
+            payment.user.coins += shop_item.coins
+            payment.user.save()
             payment.save()
             return HttpResponse('Transaction success.\nRefID: ' + str(result.RefID))
         elif result.Status == 101:
