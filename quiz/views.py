@@ -116,7 +116,7 @@ class Payment(View):
         description = "جان جیبی"  # Required
         email = 'kh.gh.game@gmail.com'  # Optional
         mobile = '09123456789'  # Optional
-        CallbackURL = 'http://46.45.163.65:81/message/verify/'
+        CallbackURL = 'http://46.45.163.65:81/message/verify'
         result = client.service.PaymentRequest(MERCHANT, amount, description, email, mobile, CallbackURL)
         if result.Status == 100:
             authority = str(int(str(result.Authority)))
