@@ -205,7 +205,7 @@ class GameInfoHandler(Handler):
                         context["seasons"][str(i)][str(level.part)] = []
                     stars = 0
                     try:
-                        stars = LevelTrack.objects.get(user=request.user, level=level).stars
+                        stars = LevelTrack.objects.get(user=self.request.user, level=level).stars
                     except:
                         pass
                     context["seasons"][str(i)][str(level.part)].append(
@@ -1519,6 +1519,8 @@ class SubmitInviteCodeHandler(Handler):
 
         return self.response('submit_invite_code', context)
 
+
+
 class AutoCompleteQueryHandler(Handler):
     def is_match(self, username, q):
         return q in username
@@ -1589,6 +1591,7 @@ MESSAGE_HANDLERS = {
     'match_emoji': MatchEmojiHandler,
     "autocomplete_query": AutoCompleteQueryHandler,
     "submit_invite_code": SubmitInviteCodeHandler,
+    "rate_us": RateUsHandler,
 }
 
 
