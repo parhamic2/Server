@@ -203,10 +203,16 @@ class GameInfoHandler(Handler):
                         continue
                     if str(level.part) not in context["seasons"][str(i)]:
                         context["seasons"][str(i)][str(level.part)] = []
+                    stars = 0
+                    try:
+                        stars = LevelTrack.objects.get(user=request.user, level=level).stars
+                    except:
+                        pass
                     context["seasons"][str(i)][str(level.part)].append(
                         {
                             "id": level.level_id,
                             "h": level.reach_reward > 0,
+                            "s": stars
                             "c": self.request.user.collected_reach_reward <= level.level_id,
                         }
                     )
@@ -755,8 +761,7 @@ class LevelCompleteHandler(Handler):
         context = {}
 
         level = Level.objects.get(level_id=level_id)
-
-        LevelTrack.objects.create(level=level, user=self.request.user,
+        track = LevelTrack.objects.create(level=level, user=self.request.user,
                 start_coin=params['track_startcoin'], finish_coin=params['track_finishcoin'],
                 time=params['track_time'], help_used=params['track_helpused'])
         
@@ -779,6 +784,8 @@ class LevelCompleteHandler(Handler):
                 which_third = 2
             if time < (level.time // 3):
                 which_third = 3
+            track.stars = which_third
+            track.save()
             if level_id >= self.request.user.level_reached:
                 self.request.user.give_xp(calculate_reward(level.score, which_third))
                 coins = calculate_reward(level.coin, which_third)

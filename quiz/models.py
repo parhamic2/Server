@@ -658,6 +658,7 @@ class LevelTrack(models.Model):
     finish_coin = models.PositiveIntegerField(default=0)
     time = models.FloatField(default=0)
     help_used = models.PositiveSmallIntegerField(default=0)
+    stars = models.PositiveSmallIntegerField(default=0)
 
 
 class ZarinPayment(models.Model):
