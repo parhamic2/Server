@@ -212,7 +212,7 @@ class GameInfoHandler(Handler):
                         {
                             "id": level.level_id,
                             "h": level.reach_reward > 0,
-                            "s": stars
+                            "s": stars,
                             "c": self.request.user.collected_reach_reward <= level.level_id,
                         }
                     )
@@ -761,10 +761,13 @@ class LevelCompleteHandler(Handler):
         context = {}
 
         level = Level.objects.get(level_id=level_id)
-        track = LevelTrack.objects.create(level=level, user=self.request.user,
-                start_coin=params['track_startcoin'], finish_coin=params['track_finishcoin'],
-                time=params['track_time'], help_used=params['track_helpused'])
-        
+        track = LevelTrack.objects.get_or_create(level=level, user=self.request.user)
+        track.start_coin = params['track_startcoin']
+        track.finish_coin = params['track_finishcoin']
+        track.time = params['track_time']
+        track.help_used = params['track_helpused']
+        track.save()
+
         if level_id == 0:  # match game
             try:  # the match may be deleted
                 match_game = MatchGame.objects.get(pk=game_id, state="PLAYING")
@@ -773,22 +776,23 @@ class LevelCompleteHandler(Handler):
                 pass
         else:
             def calculate_reward(amount, turn):
+                if turn == 1:
+                    return amount
                 if turn == 2:
                     return round(amount/3*2)
                 if turn == 3:
                     return round(amount/3)
-                return amount
+                return 0
             which_third = 1
             coins = 0
             if time < (level.time // 3) * 2:
                 which_third = 2
             if time < (level.time // 3):
                 which_third = 3
-            track.stars = which_third
-            track.save()
-            if level_id >= self.request.user.level_reached:
+            
+            if level_id >= self.request.user.level_reached or which_third > track.stars:
                 self.request.user.give_xp(calculate_reward(level.score, which_third))
-                coins = calculate_reward(level.coin, which_third)
+                coins = calculate_reward(level.coin, which_third) - calculate_reward(level.coin, track.stars)
                 self.request.user.coins += coins
                 try:
                     next_level = Level.objects.filter(level_id__gt=level_id)[0]
@@ -804,6 +808,8 @@ class LevelCompleteHandler(Handler):
                 except:
                     self.request.user.level_reached += 1
                 self.request.user.save()
+            track.stars = which_third
+            track.save()
             context["coins"] = coins
             context["stars"] = 3 - which_third
             context["words"] = list(
