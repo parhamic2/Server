@@ -1591,7 +1591,6 @@ MESSAGE_HANDLERS = {
     'match_emoji': MatchEmojiHandler,
     "autocomplete_query": AutoCompleteQueryHandler,
     "submit_invite_code": SubmitInviteCodeHandler,
-    "rate_us": RateUsHandler,
 }
 
 
