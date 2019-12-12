@@ -808,7 +808,7 @@ class LevelCompleteHandler(Handler):
                 except:
                     self.request.user.level_reached += 1
                 self.request.user.save()
-            track.stars = which_third
+            track.stars = 4-which_third
             track.save()
             context["coins"] = coins
             context["stars"] = 3 - which_third
