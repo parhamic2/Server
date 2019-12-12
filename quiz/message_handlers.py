@@ -761,7 +761,7 @@ class LevelCompleteHandler(Handler):
         context = {}
 
         level = Level.objects.get(level_id=level_id)
-        track = LevelTrack.objects.get_or_create(level=level, user=self.request.user)
+        track, _ = LevelTrack.objects.get_or_create(level=level, user=self.request.user)
         track.start_coin = params['track_startcoin']
         track.finish_coin = params['track_finishcoin']
         track.time = params['track_time']
