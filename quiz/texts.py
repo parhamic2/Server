@@ -73,6 +73,7 @@ TEXTS_FA = {
     "tournoment_already_participated": "",
     "tournoment_level_range": "برای شرکت در این چالش حداقل باید سطح {} باشید",
     "coin_duplicate": "کد تکراری",
+    "coin_code": "تبریک، تعداد {} سکه دریافت کردی",
     "welcome_message": "Can Cepper oyununa hoş geldiniz ve şimdiden oyuna başlayabilirsiniz",
     "tournoment_match_exist": "یک بازی باز داری",
     "bought_boost": "خرید شما باموفقیت انجام شد",
