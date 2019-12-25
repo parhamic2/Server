@@ -153,6 +153,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         return JsonResponse(list(chart_data), safe=False)
 
     def installs_chart_data(self):
+        return []
         return (
             User.objects.filter(is_bot=False, logged_in=True).annotate(x=TruncDay("date_joined"))
             .values("x")
@@ -160,6 +161,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
             .order_by("-x")
         )
     def online_chart_data(self):
+        return []
         return (
             PlayRecord.objects.all().annotate(x=TruncDay("date"))
             .values("x")
@@ -167,6 +169,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
             .order_by("-x")
         )
     def stores_chart_data(self):
+        return [[]]
         return [
             [User.objects.filter(store__icontains="bazaar").count()],
             [User.objects.filter(store__icontains="google").count()],
