@@ -174,23 +174,40 @@ class User(AbstractUser):
     def send_notification(self, title, content):
         if self.is_bot or self.push_notification_id == "":
             return
-        header = {
-            "Content-Type": "application/json; charset=utf-8",
-            "Authorization": "Basic ZWI5ODBiZDctNWIyMS00ZDM3LTk1MTctMDk2YjVhYTU5MWJk",
+        data = {
+        'app_ids': ['com.dreamwings.jaanjibi', ],
+            'data': {
+                'title': title,
+                'content': content,
+                'sound_url': 'http://5.253.24.104/static/notif2.mp3'
+                
+            },
+            'filters': {
+                'pushe_id': [self.push_notification_id]
+            },
         }
+        req = requests.post('https://api.pushe.co/v2/messaging/notifications/', json=data, headers={'Authorization': 'Token 3d258a0f5e6d5d3eb6cdc0a0f028493cf97ce750', 'Content-Type': 'application/json'})
 
-        payload = {
-            "app_id": "6cc33c87-b167-4863-a6b9-2ed884872e79",
-            "contents": {"en": content},
-            "include_player_ids": [self.push_notification_id],
-        }
+        # One Signal
+        # header = {
+        #     "Content-Type": "application/json; charset=utf-8",
+        #     "Authorization": "Basic ZWI5ODBiZDctNWIyMS00ZDM3LTk1MTctMDk2YjVhYTU5MWJk",
+        # }
 
-        req = requests.post(
-            "https://onesignal.com/api/v1/notifications",
-            headers=header,
-            data=json.dumps(payload),
-        )
-        print (req.text)
+        # payload = {
+        #     "app_id": "6cc33c87-b167-4863-a6b9-2ed884872e79",
+        #     "contents": {"en": content},
+        #     "include_player_ids": [self.push_notification_id],
+        # }
+
+        # req = requests.post(
+        #     "https://onesignal.com/api/v1/notifications",
+        #     headers=header,
+        #     data=json.dumps(payload),
+        # )
+        # print (req.text)
+
+
         # url = "https://api.pushe.co/v2/messaging/notifications/"
         # payload = {
         #     "app_ids": ["com.dreamwings.john"],

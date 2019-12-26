@@ -28,6 +28,7 @@ TEXTS_TR = {
     "lottery_already_participated": "Bu Kura Çekilişine zaten katıldınız",
     "tournoment_already_participated": "",
     "tournoment_level_range": "Bu Çekişmeye katılmak için en azından {} seviyede olmalısınız",
+    "coin_code": "",
     "coin_duplicate": "Bu şarj kodu zaten kullanılmış.",
     "welcome_message": "Can Cepper oyununa hoş geldiniz ve şimdiden oyuna başlayabilirsiniz",
     "tournoment_match_exist": "Bu kura çekilimine zaten katıldınız.",
