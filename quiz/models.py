@@ -6,6 +6,7 @@ import random
 from constance import config
 import socket
 from django.utils import timezone
+from .tasks import send_notification
 
 
 def LEVELS_XPS():
@@ -707,7 +708,8 @@ class SendNotification(models.Model):
             if self.in_game_notification:
                 user.send_mail(self.title, self.message)
             else:
-                user.send_notification(self.title, self.message)
+                send_notification.delay(user.pk, self.title, self.message)
+                # user.send_notification(self.title, self.message)
     class Meta:
         verbose_name = "Send group notification"
         verbose_name_plural = "Send group notification"
