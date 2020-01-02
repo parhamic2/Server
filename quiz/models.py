@@ -347,6 +347,9 @@ class Match(models.Model):
             if loser is None:
                 loser = key
 
+        print ('rewarding match ', self.pk)
+        print ('winner is ', winner)
+        print ('loser is ', loser)
         user = User.objects.get(pk=winner)
         loser = User.objects.get(pk=loser)
         if self.tournoment is None:
