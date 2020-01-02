@@ -202,6 +202,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     def _xp(self, obj):
         lvl, xp = obj.get_level()
         return '{} + {}xp'.format(lvl, xp)
+    _xp.admin_order_field = 'xp'
     def _level_reached(self, obj):
         lvl = str(obj.level_reached)
         return 'S:{} P:{}: L:{}'.format(lvl[0], int(lvl[1]) + 1, int(lvl[2:]))
