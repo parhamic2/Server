@@ -221,7 +221,6 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         return super().get_queryset(request)
     
     def _username(self, obj):
-        return obj.username
         qs = (*self.get_queryset(self.request), )
         return str(len(qs) - qs.index(obj)) + '. ' + obj.username
     @mark_safe
