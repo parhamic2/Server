@@ -217,11 +217,12 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
             return 'iOS'
         return 'Android'
     def get_queryset(self, request):
-        self.request = request      
-        return super().get_queryset(request)
+        self.request = request
+        self.query_set_cached = super().get_queryset(request)
+        return self.query_set_cached
     
     def _username(self, obj):
-        qs = (*self.get_queryset(self.request), )
+        qs = (*self.query_set_cached, )
         return str(len(qs) - qs.index(obj)) + '. ' + obj.username
     @mark_safe
     def _parent(self, obj):
