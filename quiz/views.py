@@ -32,6 +32,7 @@ def register_view(request):
     password = generate_password()
     user = User.objects.create_user(username, None, password)
     token, created = Token.objects.get_or_create(user=user)
+    print ('#REGISTERING', token)
     return JsonResponse(
         {
             "token": token.key,
