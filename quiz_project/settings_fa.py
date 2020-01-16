@@ -31,6 +31,7 @@ AUTH_USER_MODEL = "quiz.User"
 
 # Application definition
 INSTALLED_APPS = [
+    'corsheaders',
     "quiz",
     'rangefilter',
     "django.contrib.admin",
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
     # 'django.middleware.csrf.CsrfViewMiddleware',
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -251,3 +253,4 @@ EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 LANGUAGE = 'FA'
+CORS_ORIGIN_ALLOW_ALL = True

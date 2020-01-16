@@ -31,6 +31,7 @@ AUTH_USER_MODEL = "quiz.User"
 
 # Application definition
 INSTALLED_APPS = [
+    'corsheaders',
     "quiz",
     'rangefilter',
     "django.contrib.admin",
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
     # 'django.middleware.csrf.CsrfViewMiddleware',
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -79,20 +81,20 @@ WSGI_APPLICATION = "quiz_project.wsgi.application"
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        "NAME": "unity_quiz",
-        "USER": "root",
-        "PASSWORD": "zozpzi1o1p1i",
-        "HOST": "localhost",  # Or an IP Address that your DB is hosted on
-        "PORT": "3306",
-        "OPTIONS": {"charset": "utf8mb4"},
-    }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # "default": {
+    #     "ENGINE": "django.db.backends.mysql",
+    #     # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     "NAME": "unity_quiz",
+    #     "USER": "root",
+    #     "PASSWORD": "zozpzi1o1p1i",
+    #     "HOST": "localhost",  # Or an IP Address that your DB is hosted on
+    #     "PORT": "3306",
+    #     "OPTIONS": {"charset": "utf8mb4"},
     # }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 
 
@@ -223,3 +225,4 @@ EMAIL_HOST_USER = 'canceppe'
 EMAIL_HOST_PASSWORD = '768Lybp0Ul'
 
 LANGUAGE = 'TR'
+CORS_ORIGIN_ALLOW_ALL = True
