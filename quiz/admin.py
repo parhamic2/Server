@@ -179,6 +179,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = (
         "_username",
         "coins",
+        "_trophy",
         "_xp",
         "_level_reached",
         "date_joined",
@@ -203,6 +204,8 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         lvl, xp = obj.get_level()
         return '{} + {}xp'.format(lvl, xp)
     _xp.admin_order_field = 'xp'
+    def _trophy(self, obj):
+        return "{}".format(obj.trophy)
     def _level_reached(self, obj):
         lvl = str(obj.level_reached)
         return 'S:{} P:{}: L:{}'.format(lvl[0], int(lvl[1]) + 1, int(lvl[2:]))
