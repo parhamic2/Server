@@ -13,8 +13,22 @@ from quiz.models import User
 class AdminAPI(APIView):
     permission_classes = []
 
+    def user_detail(self, data):
+        user = User.objects.get(username=data.get('username'))
+        return Response({
+            'coins': user.coins,
+            'trophy': user.trophy,
+            'copouns': user.copouns,
+            'level_reached': user.level_reached,
+            'date_joined': user.date_joined.strftime("%D %H:%m"),
+            'phone': user.phone,
+            'username': user.username,
+            'xp': user.xp,
+            'child_list': user.childs.all().values_list('username', flat=True)
+        })
+
     def users_list(self, data):
-        users = User.objects.all()
+        users = User.objects.exclude(username__startswith="GUEST#")
         return Response(
             {
                 "headers": ["Name", "Coins", "XP", "Level", "Date", "Device"],
