@@ -70,8 +70,7 @@ def update_matches2():
     for game in idle_games:
         LevelCompleteHandler.complete_game(game, 0)
 
-    idle_matches = Match.objects.filter(
-        state="STARTED",
+    idle_matches = Match.objects.exclude(state="FINISHED").filter(
         created__lt=get_time() - timezone.timedelta(hours=config.MATCH_EXPIRE_TIME),
     )
     for match in idle_matches:

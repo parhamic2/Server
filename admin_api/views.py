@@ -24,7 +24,9 @@ class AdminAPI(APIView):
             'phone': user.phone,
             'username': user.username,
             'xp': user.xp,
-            'child_list': user.childs.all().values_list('username', flat=True)
+            'child_list': user.childs.all().values_list('username', flat=True),
+            'read_fields': ['trophy', 'copouns', 'level_reached', 'date_joined', 'phone', 'username', 'xp'],
+            'write_fields': ['coins']
         })
 
     def users_list(self, data):

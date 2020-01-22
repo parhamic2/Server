@@ -424,7 +424,7 @@ class MatchesListHandler(Handler):
     def get_matches_list(user):
         context = {}
         context["matches"] = []
-        for match in user.matches.all().order_by('-created'):
+        for match in user.matches.filter(tournoment=None).order_by('-created'):
             m = {}
             users = match.users.all()
             users = sorted(users, key=lambda x: x.pk != match.user_created.pk)
