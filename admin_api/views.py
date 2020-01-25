@@ -8,10 +8,10 @@ from django.views.generic import View
 from django.utils import timezone
 
 from quiz.models import User
-
+from rest_framework.permissions import AllowAny
 
 class AdminAPI(APIView):
-    permission_classes = []
+    permission_classes = [AllowAny]
 
     def user_detail(self, data):
         user = User.objects.get(username=data.get('username'))
