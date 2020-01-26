@@ -702,7 +702,11 @@ class SendNotification(models.Model):
     title = models.CharField(blank=True, max_length=64)
     message = models.TextField(blank=True)
     in_game_notification = models.BooleanField(default=False)
+    image = models.ImageField(upload_to='notifications', blank=True, null=True)
+
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        print ('iTag', self.image.path, self.image.url)
         for user in User.objects.filter(marked_for_notification=True):
             if self.in_game_notification:
                 user.send_mail(self.title, self.message)
