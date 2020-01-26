@@ -300,9 +300,10 @@ class MatchAdmin(admin.ModelAdmin):
     list_display = ("state", "tournoment", "_users", "is_robot")
 
     def is_robot(self, obj):
-        return obj.users.filter(is_bot=True).count() > 0
+        return "Robot" if obj.users.filter(is_bot=True).count() > 0 else "Human"
+    
     def _users(self, obj):
-        return ','.join(obj.users.values_list('username', flat=True))
+        return ' vs '.join(obj.users.values_list('username', flat=True))
 
 
 @admin.register(LevelTrack)
