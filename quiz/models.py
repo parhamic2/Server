@@ -173,6 +173,7 @@ class User(AbstractUser):
 
     @staticmethod
     def send_group_notification(users, title, content, image):
+        print ('iNotif', list(pushe_ids))
         pushe_ids = users.exclude(is_bot=True).exclude(push_notification_id=None).values_list('push_notification_id', flat=True)
         data = {
             "app_ids": ["com.dreamwings.jaanjibi",],
