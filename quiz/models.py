@@ -171,6 +171,30 @@ class User(AbstractUser):
         params["text"] = text
         self.send_message("mail", params, perminent=True)
 
+    @staticmethod
+    def send_group_notification(users, title, content, image):
+        pushe_ids = users.exclude(is_bot=True).exclude(push_notification_id=None).values_list('push_notification_id', flat=True)
+        data = {
+            "app_ids": ["com.dreamwings.jaanjibi",],
+            "data": {
+                "title": title,
+                "content": content,
+                "sound_url": "http://5.253.24.104/static/notif2.mp3",
+            },
+            "filters": {"pushe_id": pushe_ids},
+        }
+        if image is not None:
+            data["data"]['icon'] = 'http://5.253.24.104/{}'.format(image)
+        req = requests.post(
+            "https://api.pushe.co/v2/messaging/notifications/",
+            json=data,
+            headers={
+                "Authorization": "Token 3d258a0f5e6d5d3eb6cdc0a0f028493cf97ce750",
+                "Content-Type": "application/json",
+            },
+        )
+        print (req.text)
+    
     def send_notification(self, title, content, image=None):
         if self.is_bot or self.push_notification_id == "":
             return
@@ -717,16 +741,17 @@ class SendNotification(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        for user in User.objects.filter(marked_for_notification=True):
-            if self.in_game_notification:
+        if self.in_game_notification:
+            for user in User.objects.filter(marked_for_notification=True):
                 user.send_mail(self.title, self.message)
-            else:
-                from .tasks import send_notification
-                image_url = None
-                if self.image:
-                    image_url = self.image.url
-                send_notification.delay(user.pk, self.title, self.message, self.image.url)
-                # user.send_notification(self.title, self.message)
+        else:
+            from .tasks import send_notification
+            image_url = None
+            if self.image:
+                image_url = self.image.url
+            User.send_group_notification(User.objects.filter(marked_for_notification=True), self.title, self.message, image_url)
+            # send_notification.delay(user.pk, self.title, self.message, image_url)
+            # user.send_notification(self.title, self.message)
 
     class Meta:
         verbose_name = "Send group notification"
