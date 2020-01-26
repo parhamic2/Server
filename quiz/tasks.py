@@ -59,7 +59,7 @@ def update_matches():
 
 @shared_task
 def clear_guests():
-    User.objects.filter(username__startswith="GUEST#").delete()
+    User.objects.filter(username__startswith="GUEST#", last_alive_message__lt=timezone.now()-timezone.timedelta(minutes=15)).delete()
 
 @shared_task
 def update_matches2():
