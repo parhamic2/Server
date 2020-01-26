@@ -178,7 +178,7 @@ class User(AbstractUser):
             .exclude(push_notification_id=None)
             .values_list("push_notification_id", flat=True)
         )
-        print("iNotif", list(pushe_ids))
+        pushe_ids = list(filter(lambda x: len(x) > 2, pushe_ids))
         data = {
             "app_ids": ["com.dreamwings.jaanjibi",],
             "data": {
@@ -187,7 +187,7 @@ class User(AbstractUser):
                 "sound_url": "http://5.253.24.104/static/notif2.mp3",
                 "action": {"action_type": "A"},
             },
-            "filters": {"pushe_id": list(pushe_ids)},
+            "filters": {"pushe_id": pushe_ids},
         }
         if image is not None:
             data["data"]["icon"] = "http://5.253.24.104/{}".format(image)
