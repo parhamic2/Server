@@ -297,7 +297,12 @@ class LevelAdmin(admin.ModelAdmin):
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ("state", "tournoment")
+    list_display = ("state", "tournoment", "_users", "is_robot")
+
+    def is_robot(self, obj):
+        return obj.users.filter(is_bot=True).count() > 0
+    def _users(self, obj):
+        return ','.join(obj.users.values_list('username', flat=True))
 
 
 @admin.register(LevelTrack)

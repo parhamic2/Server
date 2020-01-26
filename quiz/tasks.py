@@ -97,7 +97,7 @@ def handle_queued_players(players, tournoment=None):
                 user.in_queue = False
                 user.save()
                 user.send_message("start_match", {"match_id": str(match.pk)})
-        elif players[i].queued_time < get_time() - timezone.timedelta(seconds=3):
+        elif players[i].queued_time < get_time() - timezone.timedelta(seconds=10):
             match = create_match(
                 [players[i]], "STARTED", players[i], tournoment=tournoment
             )

@@ -36,6 +36,12 @@ app.conf.beat_schedule = {
             run_every=timedelta(seconds=2), offset=timedelta(seconds=0.7)
         ),
     },
+    "clear_guests": {
+        "task": "quiz.tasks.clear_guests",
+        "schedule": MySchedule(
+            run_every=timedelta(seconds=60)
+        ),
+    },
     "lottery": {
         "task": "quiz.tasks.lottery",
         "schedule": MySchedule(run_every=timedelta(seconds=10)),
