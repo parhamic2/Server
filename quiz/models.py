@@ -181,7 +181,7 @@ class User(AbstractUser):
                 "content": content,
                 "sound_url": "http://5.253.24.104/static/notif2.mp3",
             },
-            "filters": {"pushe_id": pushe_ids},
+            "filters": {"pushe_id": list(pushe_ids)},
         }
         if image is not None:
             data["data"]['icon'] = 'http://5.253.24.104/{}'.format(image)
