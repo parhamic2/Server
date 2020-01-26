@@ -184,7 +184,7 @@ class User(AbstractUser):
             "filters": {"pushe_id": [self.push_notification_id]},
         }
         if image is not None:
-            data["data"]['icon'] = 'http://5.253.24.104/{}'.format(image.url)
+            data["data"]['icon'] = 'http://5.253.24.104/{}'.format(image)
         req = requests.post(
             "https://api.pushe.co/v2/messaging/notifications/",
             json=data,
@@ -721,8 +721,10 @@ class SendNotification(models.Model):
                 user.send_mail(self.title, self.message)
             else:
                 from .tasks import send_notification
-
-                send_notification.delay(user.pk, self.title, self.message, self.image)
+                image_url = None
+                if self.image:
+                    image_url = self.image.url
+                send_notification.delay(user.pk, self.title, self.message, self.image.url)
                 # user.send_notification(self.title, self.message)
 
     class Meta:
