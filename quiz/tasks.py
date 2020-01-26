@@ -78,7 +78,10 @@ def update_matches2():
         created__lt=get_time() - timezone.timedelta(hours=config.MATCH_EXPIRE_TIME),
     )
     for match in idle_matches:
-        match.give_rewards()
+        if len(match.users.all()) < 2:
+            match.delete()
+        else:
+            match.give_rewards()
 
 def handle_queued_players(players, tournoment=None):
     idle_players = players.filter(
