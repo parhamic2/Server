@@ -28,7 +28,7 @@ def generate_password(length=16):
 def register_view(request):
     # if request.method != 'POST':
     #     return Response('')
-    username = "GUEST#{}".format(User.objects.count() + 2000)
+    username = "GUEST#{}".format(generate_password(12))
     password = generate_password()
     user = User.objects.create_user(username, None, password)
     token, created = Token.objects.get_or_create(user=user)
