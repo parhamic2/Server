@@ -23,7 +23,7 @@ class MySchedule(schedule):
         return self.__class__, (self._run_every, self._offset)
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "quiz_project.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "quiz_project.settings_fa")
 
 app = Celery("quiz_project")
 app.config_from_object("django.conf:settings", namespace="CELERY")

@@ -58,6 +58,10 @@ def update_matches():
         )
 
 @shared_task
+def clear_guests():
+    User.objects.filter(username__startswith="GUEST#").delete()
+
+@shared_task
 def update_matches2():
     from constance import config
     MatchLevel = Level.objects.get(level_id=0)
