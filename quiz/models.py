@@ -173,19 +173,24 @@ class User(AbstractUser):
 
     @staticmethod
     def send_group_notification(users, title, content, image):
-        pushe_ids = users.exclude(is_bot=True).exclude(push_notification_id=None).values_list('push_notification_id', flat=True)
-        print ('iNotif', list(pushe_ids))
+        pushe_ids = (
+            users.exclude(is_bot=True)
+            .exclude(push_notification_id=None)
+            .values_list("push_notification_id", flat=True)
+        )
+        print("iNotif", list(pushe_ids))
         data = {
             "app_ids": ["com.dreamwings.jaanjibi",],
             "data": {
                 "title": title,
                 "content": content,
                 "sound_url": "http://5.253.24.104/static/notif2.mp3",
+                "action": {"action_type": "A"},
             },
             "filters": {"pushe_id": list(pushe_ids)},
         }
         if image is not None:
-            data["data"]['icon'] = 'http://5.253.24.104/{}'.format(image)
+            data["data"]["icon"] = "http://5.253.24.104/{}".format(image)
         req = requests.post(
             "https://api.pushe.co/v2/messaging/notifications/",
             json=data,
@@ -194,8 +199,8 @@ class User(AbstractUser):
                 "Content-Type": "application/json",
             },
         )
-        print (req.text)
-    
+        print(req.text)
+
     def send_notification(self, title, content, image=None):
         if self.is_bot or self.push_notification_id == "":
             return
@@ -205,11 +210,12 @@ class User(AbstractUser):
                 "title": title,
                 "content": content,
                 "sound_url": "http://5.253.24.104/static/notif2.mp3",
+                "action": {"action_type": "A"},
             },
             "filters": {"pushe_id": [self.push_notification_id]},
         }
         if image is not None:
-            data["data"]['icon'] = 'http://5.253.24.104/{}'.format(image)
+            data["data"]["icon"] = "http://5.253.24.104/{}".format(image)
         req = requests.post(
             "https://api.pushe.co/v2/messaging/notifications/",
             json=data,
@@ -218,7 +224,7 @@ class User(AbstractUser):
                 "Content-Type": "application/json",
             },
         )
-        print (req.text)
+        print(req.text)
 
         # One Signal
         # header = {
@@ -747,10 +753,16 @@ class SendNotification(models.Model):
                 user.send_mail(self.title, self.message)
         else:
             from .tasks import send_notification
+
             image_url = None
             if self.image:
                 image_url = self.image.url
-            User.send_group_notification(User.objects.filter(marked_for_notification=True), self.title, self.message, image_url)
+            User.send_group_notification(
+                User.objects.filter(marked_for_notification=True),
+                self.title,
+                self.message,
+                image_url,
+            )
             # send_notification.delay(user.pk, self.title, self.message, image_url)
             # user.send_notification(self.title, self.message)
 
