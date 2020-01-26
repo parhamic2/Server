@@ -193,6 +193,7 @@ class User(AbstractUser):
                 "Content-Type": "application/json",
             },
         )
+        print (req.text)
 
         # One Signal
         # header = {
