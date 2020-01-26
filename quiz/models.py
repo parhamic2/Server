@@ -171,22 +171,28 @@ class User(AbstractUser):
         params["text"] = text
         self.send_message("mail", params, perminent=True)
 
-    def send_notification(self, title, content):
+    def send_notification(self, title, content, image=None):
         if self.is_bot or self.push_notification_id == "":
             return
         data = {
-        'app_ids': ['com.dreamwings.jaanjibi', ],
-            'data': {
-                'title': title,
-                'content': content,
-                'sound_url': 'http://5.253.24.104/static/notif2.mp3'
-                
+            "app_ids": ["com.dreamwings.jaanjibi",],
+            "data": {
+                "title": title,
+                "content": content,
+                "sound_url": "http://5.253.24.104/static/notif2.mp3",
             },
-            'filters': {
-                'pushe_id': [self.push_notification_id]
-            },
+            "filters": {"pushe_id": [self.push_notification_id]},
         }
-        req = requests.post('https://api.pushe.co/v2/messaging/notifications/', json=data, headers={'Authorization': 'Token 3d258a0f5e6d5d3eb6cdc0a0f028493cf97ce750', 'Content-Type': 'application/json'})
+        if image is not None:
+            data["data"]['icon'] = 'http://5.253.24.104/{}'.format(image.url)
+        req = requests.post(
+            "https://api.pushe.co/v2/messaging/notifications/",
+            json=data,
+            headers={
+                "Authorization": "Token 3d258a0f5e6d5d3eb6cdc0a0f028493cf97ce750",
+                "Content-Type": "application/json",
+            },
+        )
 
         # One Signal
         # header = {
@@ -206,7 +212,6 @@ class User(AbstractUser):
         #     data=json.dumps(payload),
         # )
         # print (req.text)
-
 
         # url = "https://api.pushe.co/v2/messaging/notifications/"
         # payload = {
@@ -685,41 +690,47 @@ class ZarinPayment(models.Model):
     item = models.CharField(max_length=32, blank=True, null=True)
     is_done = models.BooleanField(default=False)
 
+
 class InviteCode(models.Model):
     code = models.CharField(max_length=16)
-    user = models.ForeignKey(User, related_name="invite_codes", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, related_name="invite_codes", on_delete=models.CASCADE
+    )
     perminent = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         from .views import generate_password
+
         if not self.code:
             self.code = generate_password(5)
             while InviteCode.objects.filter(code=self.code).count() > 0:
                 self.code = generate_password(5)
         super().save(*args, **kwargs)
 
+
 class SendNotification(models.Model):
     title = models.CharField(blank=True, max_length=64)
     message = models.TextField(blank=True)
     in_game_notification = models.BooleanField(default=False)
-    image = models.ImageField(upload_to='notifications', blank=True, null=True)
+    image = models.ImageField(upload_to="notifications", blank=True, null=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        print ('iTag', self.image.path, self.image.url)
         for user in User.objects.filter(marked_for_notification=True):
             if self.in_game_notification:
                 user.send_mail(self.title, self.message)
             else:
                 from .tasks import send_notification
-                send_notification.delay(user.pk, self.title, self.message)
+
+                send_notification.delay(user.pk, self.title, self.message, self.image)
                 # user.send_notification(self.title, self.message)
+
     class Meta:
         verbose_name = "Send group notification"
         verbose_name_plural = "Send group notification"
-    
+
 
 class PlayRecord(models.Model):
     date = models.DateTimeField(auto_now_add=True)
-    player = models.ForeignKey(User, related_name='records', on_delete=models.CASCADE)
+    player = models.ForeignKey(User, related_name="records", on_delete=models.CASCADE)
     played_time = models.FloatField(default=0)

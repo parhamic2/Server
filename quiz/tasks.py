@@ -29,9 +29,9 @@ def alive_message(id, msgs):
     user.check_boost_expire()
 
 @shared_task
-def send_notification(user_id, title, content):
+def send_notification(user_id, title, content, image=None):
     user = User.objects.get(id=user_id)
-    user.send_notification(title, content)
+    user.send_notification(title, content, image)
 
 @shared_task
 def update_matches():
