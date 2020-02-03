@@ -484,7 +484,8 @@ class Level(models.Model):
     season = models.CharField(choices=SEASONS, max_length=1)
     part = models.PositiveIntegerField(default=0)
     trophy = models.PositiveIntegerField(default=0)
-    level_id = models.PositiveIntegerField(unique=True, blank=True)
+    level_id = models.PositiveIntegerField(blank=True)
+    row = models.PositiveSmallIntegerField(default=0)
     time = models.PositiveIntegerField(default=30)
     reach_reward = models.PositiveIntegerField(default=0)
     reach_reward_package = models.ForeignKey(
