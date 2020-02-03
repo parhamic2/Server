@@ -99,6 +99,7 @@ class Ping(APIView):
         return Response("done")
 
 class TelegramForward(APIView):
+    permission_classes = []
     def post(self, request):
         # 1061791409:AAHW_KePIvGPuFzH-89mXI6kQ778T_rDD-Y
         req = requests.post('https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(request.data.get('token'), request.data.get('chat_id'), request.data.get('text')))
