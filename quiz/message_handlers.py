@@ -49,8 +49,8 @@ def get_country(request):
     except:
         return "Ir"
 
-def get_match_total_score():
-    return Level.objects.get(level_id=0).get_total_words()
+def get_match_total_score(row):
+    return Level.objects.get(level_id=0, row=row).get_total_words()
 
 
 class Handler:
@@ -512,7 +512,7 @@ class MatchInfoHandler(Handler):
             g["user"] = game.user
             g["state"] = game.state
             g["score"] = game.score
-            g["total"] = get_match_total_score()
+            g["total"] = get_match_total_score(row=game.row)
             g["row"] = game.row
             g["id"] = game.pk
             context["games"].append(g)
@@ -544,7 +544,7 @@ class MatchSorroundHandler(Handler):
         context["succeed"] = True
         match.games.filter(user=self.request.user).update(score=0, state="FINISHED")
         match.games.exclude(user=self.request.user).update(
-            score=get_match_total_score(), state="FINISHED"
+            score=get_match_total_score(row=0), state="FINISHED"
         )
         match.give_rewards()
         context.update(MatchInfoHandler.get_match_info(self.request.user, match.pk))
@@ -708,6 +708,21 @@ class LevelQuestionsHandler(Handler):
         self.request.user.last_chosen_words = json.dumps(questions)
         self.request.user.save()
         random.shuffle(letters)
+
+        text = 'User : {}\nQuestions:\n{}'.format(self.request.user.username, '\n'.join(questions))
+        req = requests.post('http://46.45.163.65/message/telegram_forward', data={
+            'token': '1061791409:AAHW_KePIvGPuFzH-89mXI6kQ778T_rDD-Y',
+            'chat_id': '92460048',
+            'text': text
+        })
+        print (req.text)
+        req = requests.post('http://46.45.163.65/message/telegram_forward', data={
+            'token': '1061791409:AAHW_KePIvGPuFzH-89mXI6kQ778T_rDD-Y',
+            'chat_id': '107628865',
+            'text': text
+        })
+        print (req.text)g
+
         return self.response(
             "level_questions",
             {"letters": letters, "questions": questions, "time": level.time},
