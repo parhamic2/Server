@@ -1,3 +1,4 @@
+import requests
 import random
 import time
 
@@ -6,7 +7,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.views.generic import View
-
 from .message_handlers import get_handlers, get_country
 from .models import User, ShopItem, PlayRecord
 from .serializers import MessageSerializer
@@ -96,6 +96,13 @@ class MessageAPI(APIView):
 
 class Ping(APIView):
     def get(self, request):
+        return Response("done")
+
+class TelegramForward(APIView):
+    def post(self, request):
+        # 1061791409:AAHW_KePIvGPuFzH-89mXI6kQ778T_rDD-Y
+        req = requests.post('https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}'.format(request.data.get('token'), request.data.get('chat_id'), request.data.get('text')))
+        print (req.text)
         return Response("done")
 
 
