@@ -512,7 +512,7 @@ class MatchInfoHandler(Handler):
             g["user"] = game.user
             g["state"] = game.state
             g["score"] = game.score
-            g["total"] = get_match_total_score(row=game.row)
+            g["total"] = get_match_total_score(row=0)
             g["row"] = game.row
             g["id"] = game.pk
             context["games"].append(g)
@@ -721,8 +721,7 @@ class LevelQuestionsHandler(Handler):
             'chat_id': '107628865',
             'text': text
         })
-        print (req.text)g
-
+        print (req.text)
         return self.response(
             "level_questions",
             {"letters": letters, "questions": questions, "time": level.time},
