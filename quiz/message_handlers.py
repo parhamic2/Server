@@ -39,6 +39,7 @@ def send_sms(phone, text):
     print (req.text)
 
 def get_country(request):
+    return 'Ir'
     try:
         req = requests.get(
             "https://get.geojs.io/v1/ip/country/{}".format(
