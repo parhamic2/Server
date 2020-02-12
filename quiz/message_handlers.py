@@ -898,7 +898,7 @@ class InvitePlayerHandler(Handler):
         params = self.get_params()
         rematch = params.get("rematch", False)
         cancel = params.get("cancel", False)
-        turned_base = params.get("turned_base", False)
+        turned_base = False
 
         context = {}
         context["succeed"] = False
