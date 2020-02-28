@@ -187,6 +187,9 @@ LOGGING = {
 
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 CONSTANCE_CONFIG = {
+    "GOLDDIG_1": (10, "Gold dig 1", int),
+    "GOLDDIG_2": (22, "Gold dig 2", int),
+    "GOLDDIG_3": (35, "Gold dig 3", int),
     "HELP_1_LETTER_PRICE": (40, "One letter help price", int),
     "ESTIMATED_TIME": (0, "Estimated wait time", int),
     "HELP_2_LETTER_PRICE": (60, "Two letter help price", int),

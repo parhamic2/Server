@@ -117,6 +117,9 @@ class GameInfoHandler(Handler):
                 context['country'] = 'ir'
                 context['has_parent'] = self.request.user.parent is not None
                 context["ad_coins"] = config.AD_COINS
+                context["golddig_1"] = config.GOLDDIG_1
+                context["golddig_2"] = config.GOLDDIG_2
+                context["golddig_3"] = config.GOLDDIG_3
                 context["email_verify_coins"] = config.EMAIL_VERIFY_REWARD
                 context["invite_friend_coins"] = config.INVITE_CODE_PARENT_REWARD
                 context['invite_code_child_reward'] = config.INVITE_CODE_CHILD_REWARD
@@ -1452,6 +1455,15 @@ class AdRewardHandler(Handler):
         self.request.user.save()
         return self.response("ad_reward", context)
 
+class GoldHandler(Handler):
+    def handle(self):
+        params = self.get_params()
+        context = {}
+        context["succeed"] = True
+        self.request.user.coins += params.get('coins')
+        self.request.user.save()
+        return self.response("gold", context)
+
 
 class ShopPurchaseHandler(Handler):
     def handle(self):
@@ -1600,6 +1612,7 @@ MESSAGE_HANDLERS = {
     "hidden_word": HiddenWordHandler,
     "reach_reward": ReachRewardHandler,
     "ad_reward": AdRewardHandler,
+    "gold": GoldHandler,
     "account_sell": SellAccountHandler,
     "shop_purchase": ShopPurchaseHandler,
     'pending_matches': PendingMatchesHandler,
