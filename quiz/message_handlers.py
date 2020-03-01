@@ -1135,8 +1135,9 @@ class DailyRewardHandler(Handler):
             succeed = True
 
             self.request.user.coins += 1000
+            self.request.user.last_daily_reward = get_time()
             self.request.user.save()
-            self.request.user.send_message("show_popup", {'title': "جایزه روزانه", 'message': '۱۰۰۰ سکه جایزه گرفتی'})
+            self.request.user.send_message("show_popup", {'title': "جایزه روزانه", 'message': '۱۰۰۰ سکه جایزه گرفتی', 'force': True})
 
 
         if succeed or (reroll and self.request.user.reroll):
