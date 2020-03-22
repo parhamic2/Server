@@ -299,7 +299,7 @@ class User(AbstractUser):
 
 class CoinCode(models.Model):
     coin_amount = models.PositiveIntegerField(default=0)
-    code = models.CharField(max_length=8, unique=True, blank=True)
+    code = models.CharField(max_length=48, unique=True, blank=True)
     number = models.PositiveIntegerField(default=0)
     created = models.DateTimeField(blank=True, null=True)
     users = models.ManyToManyField(User, blank=True)
