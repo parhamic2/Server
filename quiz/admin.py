@@ -281,10 +281,23 @@ class LotteryAdmin(admin.ModelAdmin):
 
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
-    list_display = ("user", "lottery", "created")
+    list_display = ("user", "lottery", "created", "_price")
     list_filter = ("user", "lottery")
 
     search_fields = ("user__username",)
+
+    def _price(self, obj):
+        text = obj.description
+        cut_from = text.find('price')
+        cut_to = cut_from = text[cut_from:].find(',')
+        price = float(text[cut_from:cut_to].strip())
+        return price
+
+    def get_queryset(self, request):
+        q = super().get_queryset()
+        q = q.filter(lottery=None)
+        return q
+        
 
 
 @admin.register(Level)
