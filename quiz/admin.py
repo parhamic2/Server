@@ -126,7 +126,7 @@ from rangefilter.filter import DateRangeFilter
 from django.utils.html import mark_safe
 from django.urls import reverse, path
 from django.http import JsonResponse
-from django.db.models.functions import TruncDay
+from django.db.models.functions import TruncDate
 from django.db.models import Count
 
 @admin.register(User)
@@ -154,14 +154,14 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
 
     def installs_chart_data(self):
         return (
-            User.objects.filter(is_bot=False, logged_in=True).annotate(x=TruncDay("date_joined"))
+            User.objects.filter(is_bot=False, logged_in=True).annotate(x=TruncDate("date_joined"))
             .values("x")
             .annotate(y=Count("id"))
             .order_by("-x")
         )
     def online_chart_data(self):
         return (
-            PlayRecord.objects.all().annotate(x=TruncDay("date"))
+            PlayRecord.objects.all().annotate(x=TruncDate("date"))
             .values("x")
             .annotate(y=Count("id"))
             .order_by("-x")
