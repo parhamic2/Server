@@ -201,6 +201,37 @@ class User(AbstractUser):
         )
         print(req.text)
 
+
+    def give_badge(self, badge_name, level=1):
+        badge = Badge.objects.get_or_create(user=self, item=BadgeItem.objects.create(name=badge_name))
+        badge.level = level
+        badge.save()
+    def check_for_badges(self):
+        win_matches = Match.objects.filter(winner=self).count()
+        if win_matches > 20:
+            self.give_badge('win_matches', 1)
+        elif win_matches > 50:
+            self.give_badge('win_matches', 2)
+        elif win_matches > 100:
+            self.give_badge('win_matches', 3)
+
+        account_age = (timezone.now()-self.created).days
+        if account_age > 30:
+            self.give_badge('account_age', 1)
+        elif account_age > 90:
+            self.give_badge('account_age', 2)
+        elif account_age > 365:
+            self.give_badge('account_age', 3)
+        
+        from .tournoment import TournomentUser
+        tournoment_wins = TournomentUser.objects.filter(user=self, wins=12).count()
+        if tournoment_wins > 3:
+            self.give_badge('tournoment_wins', 1)
+        elif tournoment_wins > 10:
+            self.give_badge('tournoment_wins', 2)
+        elif tournoment_wins > 30:
+            self.give_badge('tournoment_wins', 3)
+
     def send_notification(self, title, content, image=None):
         if self.is_bot or self.push_notification_id == "":
             return
@@ -696,15 +727,23 @@ class Log(models.Model):
 
     def __str__(self):
         return self.description + str(self.created)
+    
+    class Meta:
+        verbose_name = 'Transaction'
+        verbose_name_plural = 'Transactions'
 
 
-class Badge(models.Model):
+class BadgeItem(models.Model):
     name = models.CharField(max_length=32)
-    players = models.ManyToManyField(User, blank=True, related_name="badges")
 
     def __str__(self):
         return self.name
 
+class Badge(models.Model):
+    item = models.ForeignKey(BadgeItem, related_name='badges', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='badges', on_delete=models.CASCADE)
+    level = models.PositiveSmallIntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
 
 class LevelTrack(models.Model):
     user = models.ForeignKey(User, related_name="tracks", on_delete=models.CASCADE)
@@ -714,7 +753,6 @@ class LevelTrack(models.Model):
     time = models.FloatField(default=0)
     help_used = models.PositiveSmallIntegerField(default=0)
     stars = models.PositiveSmallIntegerField(default=0)
-
 
 class ZarinPayment(models.Model):
     authority = models.CharField(max_length=64)
