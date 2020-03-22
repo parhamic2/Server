@@ -740,8 +740,8 @@ class BadgeItem(models.Model):
         return self.name
 
 class Badge(models.Model):
-    item = models.ForeignKey(BadgeItem, related_name='badges', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='badges', on_delete=models.CASCADE)
+    item = models.ForeignKey(BadgeItem, related_name='badges', on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, related_name='badges', on_delete=models.CASCADE, blank=True, null=True)
     level = models.PositiveSmallIntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
 
