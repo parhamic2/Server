@@ -294,7 +294,7 @@ class LogAdmin(admin.ModelAdmin):
         return price
 
     def get_queryset(self, request):
-        q = super().get_queryset()
+        q = super().get_queryset(request)
         q = q.filter(lottery=None)
         return q
         
