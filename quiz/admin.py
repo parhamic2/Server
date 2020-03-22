@@ -290,7 +290,7 @@ class LogAdmin(admin.ModelAdmin):
         text = obj.description
         cut_from = text.find('price')
         cut_to = cut_from = text[cut_from:].find(',')
-        price = float(text[cut_from:cut_to].strip())
+        price = float(text[cut_from:cut_to].split(':')[-1].strip())
         return price
 
     def get_queryset(self, request):
