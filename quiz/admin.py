@@ -289,7 +289,7 @@ class LogAdmin(admin.ModelAdmin):
     def _price(self, obj):
         text = obj.description
         cut_from = text.find('price')
-        cut_to = cut_from = text[cut_from:].find(',')
+        cut_to = cut_from + text[cut_from:].find(',')
         price = text[cut_from:cut_to].split(':')[-1].strip()
         return price
 
