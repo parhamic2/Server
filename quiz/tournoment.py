@@ -38,7 +38,7 @@ class Tournoment(models.Model):
         super().save(*args, **kwargs)
 
         from .models import User
-        if self.users.count() == 0:
+        if self.users.filter(user__is_bot=True).count() == 0:
             bots = User.objects.filter(is_bot=True)
             for bot in bots:
                 TournomentUser.objects.create(tournoment=self, user=bot)
