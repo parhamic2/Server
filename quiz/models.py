@@ -611,7 +611,12 @@ class Lottery(models.Model):
                     selected_users.append(u)
             for u in self.users.all().values_list("pk", flat=True):
                 if u not in selected_users:
-                    LotteryUser.objects.get(pk=u).delete()
+                    lu = LotteryUser.objects.get(pk=u)
+                    try:
+                        lu.user.send_mail(get_text('lottery_lose'))
+                    except:
+                        pass
+                    lu.delete()
 
             from .message_handlers import GameInfoHandler
 
