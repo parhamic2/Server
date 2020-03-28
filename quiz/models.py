@@ -613,7 +613,7 @@ class Lottery(models.Model):
                 if u not in selected_users:
                     lu = LotteryUser.objects.get(pk=u)
                     try:
-                        lu.user.send_mail(get_text('lottery_lose'))
+                        lu.user.send_mail(get_text('lottery_lose').format(self.name))
                     except:
                         pass
                     lu.delete()
