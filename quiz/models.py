@@ -232,17 +232,19 @@ class User(AbstractUser):
         elif tournoment_wins > 30:
             self.give_badge('tournoment_wins', 3)
 
-    def send_notification(self, title, content, image=None):
+    def send_notification(self, title, content, image=None, sound=True):
         if self.is_bot or self.push_notification_id == "":
             return
+        data_dict = {
+            "title": title,
+            "content": content,
+            "action": {"action_type": "A"},
+        }
+        if sound:
+            data_dict["sound_url"] = "http://5.253.24.104/static/notif2.mp3"
         data = {
             "app_ids": ["com.dreamwings.jaanjibi",],
-            "data": {
-                "title": title,
-                "content": content,
-                "sound_url": "http://5.253.24.104/static/notif2.mp3",
-                "action": {"action_type": "A"},
-            },
+            "data": data_dict,
             "filters": {"pushe_id": [self.push_notification_id]},
         }
         if image is not None:
